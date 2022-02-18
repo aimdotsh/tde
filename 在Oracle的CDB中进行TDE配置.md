@@ -178,14 +178,8 @@ Table created.
 
 Encrypting Columns in Tables
 
-
-
-![](/Users/brty.liu/Library/CloudStorage/OneDrive-共享的库-onedrive/enmo/work/base-tj/zxb-中信保/tde.assets/20220217111415.png)
-
-
-
-![image-20220217111455067](/Users/brty.liu/Library/CloudStorage/OneDrive-共享的库-onedrive/enmo/work/base-tj/zxb-中信保/tde.assets/image-20220217111455067.png)
+![image-20220218155417032](https://raw.githubusercontent.com/aimdotsh/photo/master/typ/image-20220218155417032.png)
 
 ![](https://raw.githubusercontent.com/aimdotsh/photo/master/typ/20220217111503.png)
 
-![](/Users/brty.liu/Library/CloudStorage/OneDrive-共享的库-onedrive/enmo/work/base-tj/zxb-中信保/tde.assets/20220217111837.png)
+![](https://raw.githubusercontent.com/aimdotsh/photo/master/typ/20220218154709.png)
