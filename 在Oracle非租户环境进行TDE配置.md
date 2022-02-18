@@ -151,8 +151,27 @@ Table created.
 
 
 ```
-SQL> CREATE TABLESPACE TEST_pdbtde datafile  size 10M ENCRYPTION USING 'AES256' DEFAULT STORAGE(ENCRYPT);
+SQL> CREATE TABLESPACE TEST_tde datafile  size 10M ENCRYPTION USING 'AES256' DEFAULT STORAGE(ENCRYPT);
 
 Tablespace created.
+
+sqlplus utde/tdenocdb
+  CREATE TABLE testde (
+     first_name VARCHAR2(128),
+     last_name VARCHAR2(128),
+     empID NUMBER,
+     salary NUMBER(6) 
+) tablespace TEST_tde; 
+```
+
+```
+[oracle@tcloud ~]$ ./ora dbf|grep TEST_TDE
+TEST_TDE		       /u01/app/oracle/oradata/NOCDB/datafile/o1_mf_test_tde_k0y2f9jc_.dbf			   10 NO		  0		   0
+[oracle@tcloud ~]$ strings /u01/app/oracle/oradata/NOCDB/datafile/o1_mf_test_tde_k0y2f9jc_.dbf
+}|{z
+NOCDB
+|bAglbA
+TEST_TDE
+[oracle@tcloud ~]$
 ```
 
