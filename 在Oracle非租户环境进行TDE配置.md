@@ -148,7 +148,9 @@ Table created.
 
 普通用户可以直接创建加密列空间，需要用create /aler table权限，如果要创建加密表空间，需要creae tablespace 权限。
 
+#### Encrypting Tablespaces
 
+加密表空间，需要 create tablespace 权限。
 
 ```
 SQL> CREATE TABLESPACE TEST_tde datafile  size 10M ENCRYPTION USING 'AES256' DEFAULT STORAGE(ENCRYPT);
@@ -167,11 +169,163 @@ sqlplus utde/tdenocdb
 ```
 [oracle@tcloud ~]$ ./ora dbf|grep TEST_TDE
 TEST_TDE		       /u01/app/oracle/oradata/NOCDB/datafile/o1_mf_test_tde_k0y2f9jc_.dbf			   10 NO		  0		   0
-[oracle@tcloud ~]$ strings /u01/app/oracle/oradata/NOCDB/datafile/o1_mf_test_tde_k0y2f9jc_.dbf
+[oracle@tcloud ~]$ [oracle@tcloud ~]$  strings /u01/app/oracle/oradata/NOCDB/datafile/o1_mf_test_tde_k0y2f9jc_.dbf|more
 }|{z
 NOCDB
 |bAglbA
 TEST_TDE
+ n0!
+!`,#
+Facf
+6wd`
+Jf!G0
+_y*Z
+@?Pi
+R}|fN
+<0gp
+_41w
+sFx5C7
+n1%/lK
+J?[
+WYP|B
+. h(
+01!u[2)
+b:h63
+{X4~f
+tW9c1)
+52qF7
+Kp\^
+huGk@Aw
+4-Gz
+PLP6
+8r`r~N
+D(Z7
+gTxVa
+OQbI
+\Gyx^
+|=I]
+;~5W
+EV-h+
+yVL%
+vX"M
+J73V
+@B59
+;W	7]
+r1!0}?b
+Z>W!Wd
+d6mm
+```
+
+#### 创建非加密表空间进行 strings 对比
+
+```
+CREATE TABLESPACE TEST_ENCRY
+datafile  size 10M ENCRYPTION USING 'AES256' DEFAULT STORAGE(ENCRYPT);
+create user u4tde identified by u4notde123 default tablespace TEST_ENCRY;
+grant dba to u4tde;
+sqlplus u4tde/u4notde123
+CREATE TABLE u4tde.Persons (
+PersonID int ENCRYPT,
+LastName varchar(255) ENCRYPT,
+FirstName varchar(255) ENCRYPT,
+Address varchar(255) ENCRYPT,
+City varchar(255) ENCRYPT
+);
+ 
+insert into u4tde.Persons values('898899','MOHAMMAD','SHADAB','SURREY HILLS','SYDNEY');
+commit;
+insert into u4tde.Persons values('898899','CHRIS','MARTIN','SURREY HILLS','SYDNEY');
+commit;
+insert into u4tde.Persons values('898899','YORKE','THOM','MANSFIELD','MANCHESTER');
+commit;
+[oracle@tcloud ~]$ strings /u01/app/oracle/oradata/NOCDB/datafile/o1_mf_test_enc_k0y4wwff_.dbf|more
+}|{z
+NOCDB
+bAglbA
+TEST_ENCRY
+r*H|
+XMMC
+CVK^
+wlkv
++&-|
+-e8G'
+U#I4B
++|/L
+Y*(y[
+!zRc
+7Ivb
+B*~`K
+z2!X
+bs6^
+;Z[US
+{:y7
+AA}W/Ck
+q?dq
+C<k>VPxb
+a(E9g
+Yd#bW
+&ug3
+q}QU
+erP1E
+UKn0
+\W1H
+nna;
+IOM!:
+8h 	k
+N*"w/vCf
+"}|u=
+h5/4s
+UL(}
+t<<5
+	tFH
+ap7`
+arlH
+1r%yv`
+n@.)
+{{n+9
+```
+
+
+
+```
+create tablespace test datafile  size 10M;
+create user u4notde identified by u4notde default tablespace test;
+alter user u4notde identified by u4notde123;
+grant dba to u4notde;
+sqlplus u4notde/u4notde123
+CREATE TABLE u4notde.Persons (
+PersonID int,
+LastName varchar(255),
+FirstName varchar(255),
+Address varchar(255),
+City varchar(255)
+);
+ 
+insert into u4notde.Persons values('898899','MOHAMMAD','SHADAB','SURREY HILLS','SYDNEY');
+commit;
+insert into u4notde.Persons values('898899','CHRIS','MARTIN','SURREY HILLS','SYDNEY');
+commit;
+insert into u4notde.Persons values('898899','YORKE','THOM','MANSFIELD','MANCHESTER');
+commit;
+[oracle@tcloud ~]$ ./ora dbf|grep -iw test
+TEST			       /u01/app/oracle/oradata/NOCDB/datafile/o1_mf_test_k0y4zm02_.dbf				   10 NO		  0		   0
+[oracle@tcloud ~]$
+[oracle@tcloud ~]$ strings /u01/app/oracle/oradata/NOCDB/datafile/o1_mf_test_k0y4zm02_.dbf
+}|{z
+NOCDB
+bAglbA
+TEST
+YORKE
+THOM	MANSFIELD
+MANCHESTER,
+CHRIS
+MARTIN
+SURREY HILLS
+SYDNEY,
+MOHAMMAD
+SHADAB
+SURREY HILLS
+SYDNEY
 [oracle@tcloud ~]$
 ```
 
