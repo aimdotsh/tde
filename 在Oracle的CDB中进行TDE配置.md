@@ -329,6 +329,8 @@ Table created.
 
 字短加密和表空间加密跟 nocdb的方式相同。
 
+相见 [Step 5: Encrypt Your Data](https://github.com/aimdotsh/tde/blob/main/在Oracle非租户环境进行TDE配置.md#step-5-encrypt-your-data)
+
 <img src="https://raw.githubusercontent.com/aimdotsh/photo/master/typ/image-20220218155417032.png" style="zoom:50%;" />
 
 ![](https://raw.githubusercontent.com/aimdotsh/photo/master/typ/20220217111503.png)
