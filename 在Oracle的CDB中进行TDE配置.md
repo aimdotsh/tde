@@ -13,6 +13,18 @@
 > Database Advanced Security Guidxs
 >
 > https://docs.oracle.com/database/121/ASOAG/toc.htm
+>
+> 创建 pdb 语句。
+>
+> ```
+> create pluggable database tdepdb admin user pdbadmin identified by "Password123";
+> alter pluggable database tdepdb open  instances=all;
+> alter pluggable database tdepdb save state instances=all;
+> ```
+>
+> 
+
+
 
 
 
@@ -104,14 +116,6 @@ total 4
 -rw-r--r-- 1 oracle oinstall 2408 Feb 21 10:42 ewallet.p12
 
 SQL>
-```
-
-
-
-```
-create pluggable database tdepdb admin user pdbadmin identified by "Password123";
-alter pluggable database tdepdb open  instances=all;
-alter pluggable database tdepdb save state instances=all;
 ```
 
 
