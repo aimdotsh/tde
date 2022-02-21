@@ -1,6 +1,6 @@
 
 
-## pdb tde
+## ORACLE 在CDB 的 TDE 配置
 
 > 3 Configuring Transparent Data Encryption
 >
@@ -19,18 +19,24 @@
 ### Step 1: Set the Software Keystore Location in the sqlnet.ora File
 
 ```
-mkdir -p /etc/ORACLE/WALLETS/orcl
-chown -R oracle:oinstall /etc/ORACLE/WALLETS/orcl
+mkdir -p /etc/ORACLE/WALLETS/tdecdb
+chown -R oracle:oinstall /etc/ORACLE/WALLETS/tdecdb
 ```
 
-```
+<!--建议将钱包目录放到非 ORACLE 目录下面-->
+
+使用root 创建单独的目录，权限授予给 oracle 用户。
+
+
+
+```sql
 vi /u01/app/oracle/product/12.1.0.2/dbhome_1/network/admin/sqlnet.ora
 
 ENCRYPTION_WALLET_LOCATION=
   (SOURCE=
    (METHOD=FILE)
     (METHOD_DATA=
-     (DIRECTORY=/etc/ORACLE/WALLETS/orcl)))
+     (DIRECTORY=/etc/ORACLE/WALLETS/tdecdb)))
 ```
 
 
@@ -58,15 +64,17 @@ Connected.
 > ADMINISTER KEY MANAGEMENT CREATE KEYSTORE 'keystore_location' IDENTIFIED BY software_keystore_password;
 
 ```sql
-SQL> ADMINISTER KEY MANAGEMENT CREATE KEYSTORE '/etc/ORACLE/WALLETS/orcl' IDENTIFIED BY Password23;
+SQL> ADMINISTER KEY MANAGEMENT CREATE KEYSTORE '/etc/ORACLE/WALLETS/tdecdb' IDENTIFIED BY Password23;
 keystore altered.
 ```
 
 是在 CDB$ROOT 上执行，不能在pdb级别执行。
 
 ```
-SQL>  ADMINISTER KEY MANAGEMENT CREATE KEYSTORE '/etc/ORACLE/WALLETS/orcl' IDENTIFIED BY Password23;
- ADMINISTER KEY MANAGEMENT CREATE KEYSTORE '/etc/ORACLE/WALLETS/orcl' IDENTIFIED BY Password23
+SQL> show user
+USER is "SYSKM"
+SQL>  ADMINISTER KEY MANAGEMENT CREATE KEYSTORE '/etc/ORACLE/WALLETS/tdecdb' IDENTIFIED BY Password23;
+ ADMINISTER KEY MANAGEMENT CREATE KEYSTORE '/etc/ORACLE/WALLETS/tdecdb' IDENTIFIED BY Password23
 *
 ERROR at line 1:
 ORA-65040: operation not allowed from within a pluggable database
@@ -78,6 +86,32 @@ CON_NAME
 ------------------------------
 TDEPDB
 SQL>
+
+SQL> show con_name
+
+CON_NAME
+------------------------------
+CDB$ROOT
+SQL>
+SQL> ADMINISTER KEY MANAGEMENT CREATE KEYSTORE '/etc/ORACLE/WALLETS/tdecdb' IDENTIFIED BY Password23;
+
+keystore altered.
+
+运行此语句后，作为keystore的 ewallet.p12文件将出现在密钥库/etc/ORACLE/WALLETS/tdecdb 即 sqlnet.ora 配置的位置
+
+SQL>  ! ls -l /etc/ORACLE/WALLETS/tdecdb
+total 4
+-rw-r--r-- 1 oracle oinstall 2408 Feb 21 10:42 ewallet.p12
+
+SQL>
+```
+
+
+
+```
+create pluggable database tdepdb admin user pdbadmin identified by "Password123";
+alter pluggable database tdepdb open  instances=all;
+alter pluggable database tdepdb save state instances=all;
 ```
 
 
@@ -89,7 +123,7 @@ SQL>
 ```sql
 SQL> ADMINISTER KEY MANAGEMENT SET KEYSTORE OPEN IDENTIFIED BY Password23;
 keystore altered.
-SQL> ! ls -l /etc/ORACLE/WALLETS/orcl
+SQL> ! ls -l /etc/ORACLE/WALLETS/tdecdb
 total 4
 -rw-r--r-- 1 oracle oinstall 2408 Feb 17 09:32 ewallet.p12
 ```
