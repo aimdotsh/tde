@@ -34,8 +34,6 @@
 
 [TOC]
 
-
-
 ### Step 1: Set the Software Keystore Location in the sqlnet.ora File
 
 ```
@@ -159,6 +157,7 @@ FILE		     /etc/ORACLE/WALLETS/tdecdb/			CLOSED
 SQL> l
   1* select WRL_TYPE,WRL_PARAMETER,status from	V$ENCRYPTION_WALLET
 SQL>
+
 ```
 
 
@@ -192,11 +191,17 @@ SQL> ADMINISTER KEY MANAGEMENT SET KEYSTORE OPEN IDENTIFIED BY Password23;
 
 keystore altered.
 
-SQL>  select WRL_TYPE,WRL_PARAMETER,status from	V$ENCRYPTION_WALLET;
+SQL> col  WRL_PARAMETER for a30
+SQL> select WRL_TYPE,WRL_PARAMETER,status from	V$ENCRYPTION_WALLET;
 
 WRL_TYPE	     WRL_PARAMETER					STATUS
 -------------------- -------------------------------------------------- ------------------------------
 FILE		     /etc/ORACLE/WALLETS/tdecdb/			OPEN_NO_MASTER_KEY
+
+*
+ERROR at line 1:
+ORA-28365: wallet is not open
+如果状态没有open 会提示 ORA-28365: wallet is not open。
 
 ```
 
@@ -208,16 +213,28 @@ FILE		     /etc/ORACLE/WALLETS/tdecdb/			OPEN_NO_MASTER_KEY
 
 ```sql
 ADMINISTER KEY MANAGEMENT SET KEY IDENTIFIED BY Password23 with backup USING 'tdetest01_key_bak';
+ADMINISTER KEY MANAGEMENT SET KEY USING TAG 'masterkey' IDENTIFIED BY Password23 with backup USING 'tdetest01_key_bak';
 ```
 
 > select key_id,tag,KEYSTORE_TYPE,USER,CON_ID,BACKED_UP from  v$encryption_keys
 
-```
-SQL>  select key_id,tag,KEYSTORE_TYPE,USER,CON_ID,BACKED_UP from  v$encryption_keys;
+```sql
+SQL> col tag for a20
+SQL> select key_id,tag,KEYSTORE_TYPE,USER,CON_ID,BACKED_UP from  v$encryption_keys;
 
 KEY_ID							     TAG	KEYSTORE_TYPE	  USER				     CON_ID BACKED_UP
 ------------------------------------------------------------ ---------- ----------------- ------------------------------ ---------- ---------
 AcBapz/5vk9Av29fJl/NzJwAAAAAAAAAAAAAAAAAAAAAAAAAAAAA			SOFTWARE KEYSTORE SYSKM 				  0 NO
+
+SQL> select key_id,tag,KEYSTORE_TYPE,USER,CON_ID,BACKED_UP from  v$encryption_keys;
+
+
+KEY_ID									       TAG		    KEYSTORE_TYPE     USER				 CON_ID BACKED_UP
+------------------------------------------------------------------------------ -------------------- ----------------- ------------------------------ ---------- ---------
+AWeotlcyUk+tv7GiOqqILFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA						    SOFTWARE KEYSTORE SYS				      0 NO
+AcZdrtdJe0+fvxhez7ShUQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA						    SOFTWARE KEYSTORE SYS				      0 YES
+AaKq/ko7lk9VvzWShBQ73qkAAAAAAAAAAAAAAAAAAAAAAAAAAAAA						    SOFTWARE KEYSTORE SYS				      0 YES
+
 
 ```
 
@@ -225,7 +242,14 @@ AcBapz/5vk9Av29fJl/NzJwAAAAAAAAAAAAAAAAAAAAAAAAAAAAA			SOFTWARE KEYSTORE SYSKM 	
 >
 > https://docs.oracle.com/database/121/SQLRF/statements_1003.htm#SQLRF55976
 
-
+```
+SQL>  CREATE TABLESPACE TEST_pdbtde datafile  size 10M ENCRYPTION USING 'AES256' DEFAULT STORAGE(ENCRYPT);
+ CREATE TABLESPACE TEST_pdbtde datafile  size 10M ENCRYPTION USING 'AES256' DEFAULT STORAGE(ENCRYPT)
+*
+ERROR at line 1:
+ORA-28374: typed master key not found in wallet
+如果不创建 Master Encryption Key 会提示 ORA-28374: typed master key not found in wallet
+```
 
 `WITH BACKUP`创建密钥库的备份。对于基于密码的密钥库，您必须使用此选项。或者，您可以使用该`USING`子句添加备份的简要说明。将此说明用单引号 (' ') 括起来。此标识符附加到命名的密钥库文件（例如，作为备份标识符）。
 
@@ -294,8 +318,11 @@ Table created.
 
 字短加密和表空间加密跟 nocdb的方式相同。
 
-![image-20220218155417032](https://raw.githubusercontent.com/aimdotsh/photo/master/typ/image-20220218155417032.png)
+<img src="https://raw.githubusercontent.com/aimdotsh/photo/master/typ/image-20220218155417032.png" style="zoom:50%;" />
 
 ![](https://raw.githubusercontent.com/aimdotsh/photo/master/typ/20220217111503.png)
 
-![](https://raw.githubusercontent.com/aimdotsh/photo/master/typ/20220218154709.png)
+<img src="https://raw.githubusercontent.com/aimdotsh/photo/master/typ/20220218154709.png" alt="style=&quot;zoom:50%;&quot;" style="zoom:40%;" />
+
+
+
