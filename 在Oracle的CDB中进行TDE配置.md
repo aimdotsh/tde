@@ -27,20 +27,23 @@
 > alter pluggable database tdepdb2 open  instances=all;
 > alter pluggable database tdepdb2 save state instances=all;
 > ```
->
-> 
+
 
    * [ORACLE 在CDB 的 TDE 配置](#oracle-在cdb-的-tde-配置)
       * [Step 1: Set the Software Keystore Location in the sqlnet.ora File](#step-1-set-the-software-keystore-location-in-the-sqlnetora-file)
+      
       * [Step 2: Create the Software Keystore](#step-2-create-the-software-keystore)
+      
       * [Step 3: Open the Software Keystore](#step-3-open-the-software-keystore)
+      
       * [Step 4: Set the Software TDE Master Encryption Key](#step-4-set-the-software-tde-master-encryption-key)
-* [ADMINISTER KEY MANAGEMENT](#administer-key-management)
+      
       * [Step 5: Encrypt Your Data](#step-5-encrypt-your-data)
          * [Encrypting Columns in Tables](#encrypting-columns-in-tables)
+         
          * [Encrypting Tablespaces](#encrypting-tablespaces)
-
-
+         
+           
 
 ### Step 1: Set the Software Keystore Location in the sqlnet.ora File
 
@@ -246,7 +249,7 @@ AaKq/ko7lk9VvzWShBQ73qkAAAAAAAAAAAAAAAAAAAAAAAAAAAAA						    SOFTWARE KEYSTORE 
 
 ```
 
-> # ADMINISTER KEY MANAGEMENT
+> ADMINISTER KEY MANAGEMENT
 >
 > https://docs.oracle.com/database/121/SQLRF/statements_1003.htm#SQLRF55976
 
