@@ -2,6 +2,24 @@
 
 ## 在Oracle非租户环境进行TDE配置
 
+   * [在Oracle非租户环境进行TDE配置](#在oracle非租户环境进行tde配置)
+      * [Step 1: Set the Software Keystore Location in the sqlnet.ora File](#step-1-set-the-software-keystore-location-in-the-sqlnetora-file)
+      
+      * [Step 2: Create the Software Keystore](#step-2-create-the-software-keystore)
+      
+      * [Step 3: Open the Software Keystore](#step-3-open-the-software-keystore)
+      
+      * [Step 4: Set the Software TDE Master Encryption Key](#step-4-set-the-software-tde-master-encryption-key)
+      
+      * [Step 5: Encrypt Your Data](#step-5-encrypt-your-data)
+         * [Encrypting Columns in Tables](#encrypting-columns-in-tables)
+         
+         * [Encrypting Tablespaces](#encrypting-tablespaces)
+         
+         * [创建非加密表空间进行 strings 对比](#创建非加密表空间进行-strings-对比)
+         
+           
+
 版本：12.1.0.2 nocdb
 
 ```
