@@ -22,6 +22,12 @@
 > alter pluggable database tdepdb save state instances=all;
 > ```
 >
+> ```
+> create pluggable database tdepdb2 admin user pdbadmin identified by "Password123";
+> alter pluggable database tdepdb2 open  instances=all;
+> alter pluggable database tdepdb2 save state instances=all;
+> ```
+>
 > 
 
 
@@ -123,6 +129,9 @@ SQL>
 ### Step 3: Open the Software Keystore
 
 > ADMINISTER KEY MANAGEMENT SET KEYSTORE OPEN IDENTIFIED BY software_keystore_password [CONTAINER = ALL | CURRENT];
+>
+> - *`software_keystore_password`* is the same password that you used to create the keystore in [Step 2: Create the Software Keystore](https://docs.oracle.com/database/121/ASOAG/configuring-transparent-data-encryption.htm#GUID-F098129B-BBFF-4C86-B119-80AB706DB2A1).
+> - `CONTAINER` is for use in a multitenant environment. Enter `ALL` to set the keystore in all of the PDBs in this CDB, or `CURRENT` for the current PDB.
 
 ```sql
 SQL> ADMINISTER KEY MANAGEMENT SET KEYSTORE OPEN IDENTIFIED BY Password23;
@@ -131,6 +140,65 @@ SQL> ! ls -l /etc/ORACLE/WALLETS/tdecdb
 total 4
 -rw-r--r-- 1 oracle oinstall 2408 Feb 17 09:32 ewallet.p12
 ```
+
+可以添加 CONTAINER = ALL 参数，此cdb 所有的pdb生效，使用   `CONTAINER` `=` `ALL`,  必须在root 容器执行，CDB$ROOT ，并且有  `ADMINISTER` `KEY` `MANAGEMENT` or `SYSKM`  权限。
+
+默认是 current，只针对当前 pdb 生效。
+
+可以通过V$ENCRYPTION_WALLET 视图查看状态。
+
+```
+ WRL_TYPE	     WRL_PARAMETER					STATUS
+
+-------------------- -------------------------------------------------- ------------------------------
+
+FILE		     /etc/ORACLE/WALLETS/tdecdb/			CLOSED
+
+SQL> l
+  1* select WRL_TYPE,WRL_PARAMETER,status from	V$ENCRYPTION_WALLET
+SQL>
+```
+
+
+
+open 之后的状态为 OPEN_NO_MASTER_KEY
+
+```
+
+WRL_TYPE	     WRL_PARAMETER					STATUS
+-------------------- -------------------------------------------------- ------------------------------
+FILE		     /etc/ORACLE/WALLETS/tdecdb/			OPEN_NO_MASTER_KEY
+
+SQL>
+```
+
+
+
+```
+SQL> show pdbs;
+
+    CON_ID CON_NAME			  OPEN MODE  RESTRICTED
+---------- ------------------------------ ---------- ----------
+	 4 TDEPDB2			  READ WRITE NO
+SQL>  select WRL_TYPE,WRL_PARAMETER,status from	V$ENCRYPTION_WALLET;
+
+WRL_TYPE	     WRL_PARAMETER					STATUS
+-------------------- -------------------------------------------------- ------------------------------
+FILE		     /etc/ORACLE/WALLETS/tdecdb/			CLOSED
+
+SQL> ADMINISTER KEY MANAGEMENT SET KEYSTORE OPEN IDENTIFIED BY Password23;
+
+keystore altered.
+
+SQL>  select WRL_TYPE,WRL_PARAMETER,status from	V$ENCRYPTION_WALLET;
+
+WRL_TYPE	     WRL_PARAMETER					STATUS
+-------------------- -------------------------------------------------- ------------------------------
+FILE		     /etc/ORACLE/WALLETS/tdecdb/			OPEN_NO_MASTER_KEY
+
+```
+
+
 
 ### Step 4: Set the Software TDE Master Encryption Key
 
@@ -150,6 +218,14 @@ KEY_ID							     TAG	KEYSTORE_TYPE	  USER				     CON_ID BACKED_UP
 AcBapz/5vk9Av29fJl/NzJwAAAAAAAAAAAAAAAAAAAAAAAAAAAAA			SOFTWARE KEYSTORE SYSKM 				  0 NO
 
 ```
+
+> # ADMINISTER KEY MANAGEMENT
+>
+> https://docs.oracle.com/database/121/SQLRF/statements_1003.htm#SQLRF55976
+
+
+
+`WITH BACKUP`创建密钥库的备份。对于基于密码的密钥库，您必须使用此选项。或者，您可以使用该`USING`子句添加备份的简要说明。将此说明用单引号 (' ') 括起来。此标识符附加到命名的密钥库文件（例如，作为备份标识符）。
 
 ### Step 5: Encrypt Your Data
 
