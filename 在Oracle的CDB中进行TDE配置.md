@@ -32,6 +32,8 @@
 
 
 
+[TOC]
+
 
 
 ### Step 1: Set the Software Keystore Location in the sqlnet.ora File
@@ -286,11 +288,11 @@ SQL>   CREATE TABLE employee (
 
 Table created.
 
-
-
 ```
 
-Encrypting Columns in Tables
+#### Encrypting Tablespaces
+
+字短加密和表空间加密跟 nocdb的方式相同。
 
 ![image-20220218155417032](https://raw.githubusercontent.com/aimdotsh/photo/master/typ/image-20220218155417032.png)
 
