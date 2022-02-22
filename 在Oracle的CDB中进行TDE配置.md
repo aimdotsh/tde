@@ -331,35 +331,17 @@ SQL>   CREATE TABLE employee (
 );    2    3    4    5    6
 
 Table created.
-
 ```
 
 #### Encrypting Tablespaces
 
 字短加密和表空间加密跟 nocdb的方式相同。
 
-相见 [Step 5: Encrypt Your Data](https://github.com/aimdotsh/tde/blob/main/在Oracle非租户环境进行TDE配置.md#step-5-encrypt-your-data)
+详见 [Step 5: Encrypt Your Data](https://github.com/aimdotsh/tde/blob/main/在Oracle非租户环境进行TDE配置.md#step-5-encrypt-your-data)
 
-
-
-```sql
  select tablespace_name, encrypted from dba_tablespaces;
-```
 
 查看表空间是否加密
-
-SYSAUX			       /oradata/tdecdb/sys/sysaux01.dbf
-
-```
-alter tablespace SYSAUX encryption online using 'aes128' encrypt file_name_convert=('/oradata/tdecdb/sys/sysaux01.dbf');
-```
-
-
-
-```
-ADMINISTER KEY MANAGEMENT SET KEYSTORE CLOSE IDENTIFIED BY "Password23" CONTAINER=ALL;
-
-```
 
 <img src="https://raw.githubusercontent.com/aimdotsh/photo/master/typ/image-20220218155417032.png" style="zoom:50%;" />
 
@@ -383,17 +365,23 @@ ERROR at line 1:
 ORA-46658: keystore not open in the container
 ```
 
+以下是打开命令
+
 ```
 ADMINISTER KEY MANAGEMENT SET KEYSTORE OPEN IDENTIFIED BY newPassword23;
 ```
 
-```
-ADMINISTER KEY MANAGEMENT CREATE KEYSTORE '/etc/ORACLE/WALLETS/tdecdb' IDENTIFIED BY Password23;
+修改密码具体测试如下：
 
+```sql
 ADMINISTER KEY MANAGEMENT ALTER KEYSTORE PASSWORD IDENTIFIED BY Password23 set newPassword23 WITH BACKUP;
-ADMINISTER KEY MANAGEMENT SET KEYSTORE CLOSE IDENTIFIED BY "newPassword23" CONTAINER=ALL;
-ADMINISTER KEY MANAGEMENT ALTER KEYSTORE PASSWORD IDENTIFIED BY newPassword23 set newPassword231 WITH BACKUP;
+keystore altered.
+SQL>
 ```
+
+修改成功。
+
+
 
 检查 tde 相关的状态
 
@@ -413,9 +401,7 @@ SELECT * FROM DBA_ENCRYPTED_COLUMNS;
 
 
 
-
-
 ```
-
+ADMINISTER KEY MANAGEMENT SET KEYSTORE CLOSE IDENTIFIED BY "Password23" CONTAINER=ALL;
 ```
 
