@@ -342,14 +342,6 @@ Table created.
 
 查看表空间是否加密
 
-<img src="https://raw.githubusercontent.com/aimdotsh/photo/master/typ/image-20220218155417032.png" style="zoom:50%;" />
-
-![](https://raw.githubusercontent.com/aimdotsh/photo/master/typ/20220217111503.png)
-
-<img src="https://raw.githubusercontent.com/aimdotsh/photo/master/typ/20220218154709.png" alt="style=&quot;zoom:50%;&quot;" style="zoom:40%;" />
-
-
-
 ### Changing the Password-Based Software Keystore Password
 
 由于cdb和pdb统一使用一个钱包，修改cdb的密码之后pdb的密码也一并修改。
@@ -398,9 +390,4 @@ SELECT TABLESPACE_NAME, ENCRYPTED FROM DBA_TABLESPACES;
 SELECT * FROM DBA_ENCRYPTED_COLUMNS;
 ```
 
-
-
-```
-ADMINISTER KEY MANAGEMENT SET KEYSTORE CLOSE IDENTIFIED BY "Password23" CONTAINER=ALL;
-```
-
+ 
