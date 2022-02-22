@@ -47,7 +47,7 @@
 
 ### Step 1: Set the Software Keystore Location in the sqlnet.ora File
 
-```
+```shell
 mkdir -p /etc/ORACLE/WALLETS/tdecdb
 chown -R oracle:oinstall /etc/ORACLE/WALLETS/tdecdb
 ```
@@ -58,7 +58,7 @@ chown -R oracle:oinstall /etc/ORACLE/WALLETS/tdecdb
 
 
 
-```sql
+```shell
 vi /u01/app/oracle/product/12.1.0.2/dbhome_1/network/admin/sqlnet.ora
 
 ENCRYPTION_WALLET_LOCATION=
@@ -76,7 +76,7 @@ ENCRYPTION_WALLET_LOCATION=
 
 需要 `ADMINISTER KEY MANAGEMENT` or `SYSKM` privilege.
 
-```
+```sql
 SQL> create user c##sec_admin identified by "Password123";
 User created.
 SQL> grant SYSKM to c##sec_admin;
@@ -84,7 +84,7 @@ Grant succeeded.
 SQL> exit
 ```
 
-```
+```sql
 sqlplus c##sec_admin as syskm
 Enter password: password
 Connected.
@@ -99,7 +99,7 @@ keystore altered.
 
 是在 CDB$ROOT 上执行，不能在pdb级别执行。
 
-```
+```sql
 SQL> show user
 USER is "SYSKM"
 SQL>  ADMINISTER KEY MANAGEMENT CREATE KEYSTORE '/etc/ORACLE/WALLETS/tdecdb' IDENTIFIED BY Password23;
@@ -158,7 +158,7 @@ total 4
 
 可以通过V$ENCRYPTION_WALLET 视图查看状态。
 
-```
+```sql
  WRL_TYPE	     WRL_PARAMETER					STATUS
 
 -------------------- -------------------------------------------------- ------------------------------
@@ -175,7 +175,7 @@ SQL>
 
 open 之后的状态为 OPEN_NO_MASTER_KEY
 
-```
+```sql
 
 WRL_TYPE	     WRL_PARAMETER					STATUS
 -------------------- -------------------------------------------------- ------------------------------
@@ -186,7 +186,7 @@ SQL>
 
 
 
-```
+```sql
 SQL> show pdbs;
 
     CON_ID CON_NAME			  OPEN MODE  RESTRICTED
@@ -213,7 +213,14 @@ FILE		     /etc/ORACLE/WALLETS/tdecdb/			OPEN_NO_MASTER_KEY
 ERROR at line 1:
 ORA-28365: wallet is not open
 如果状态没有open 会提示 ORA-28365: wallet is not open。
+```
 
+
+
+关闭 的话使用如下命令
+
+```
+ADMINISTER KEY MANAGEMENT SET KEYSTORE CLOSE IDENTIFIED BY "Password23" CONTAINER=ALL;
 ```
 
 
@@ -230,7 +237,9 @@ ADMINISTER KEY MANAGEMENT SET KEY USING TAG 'masterkey' IDENTIFIED BY Password23
 > select key_id,tag,KEYSTORE_TYPE,USER,CON_ID,BACKED_UP from  v$encryption_keys
 
 ```sql
+SQL> set lines 200
 SQL> col tag for a20
+SQL> col KEY_ID for a60
 SQL> select key_id,tag,KEYSTORE_TYPE,USER,CON_ID,BACKED_UP from  v$encryption_keys;
 
 KEY_ID							     TAG	KEYSTORE_TYPE	  USER				     CON_ID BACKED_UP
@@ -253,7 +262,7 @@ AaKq/ko7lk9VvzWShBQ73qkAAAAAAAAAAAAAAAAAAAAAAAAAAAAA						    SOFTWARE KEYSTORE 
 >
 > https://docs.oracle.com/database/121/SQLRF/statements_1003.htm#SQLRF55976
 
-```
+```sql
 SQL>  CREATE TABLESPACE TEST_pdbtde datafile  size 10M ENCRYPTION USING 'AES256' DEFAULT STORAGE(ENCRYPT);
  CREATE TABLESPACE TEST_pdbtde datafile  size 10M ENCRYPTION USING 'AES256' DEFAULT STORAGE(ENCRYPT)
 *
@@ -268,7 +277,7 @@ ORA-28374: typed master key not found in wallet
 
 #### Encrypting Columns in Tables
 
-```
+```sql
 SQL> CREATE TABLESPACE TEST_pdbtde datafile  size 10M ENCRYPTION USING 'AES256' DEFAULT STORAGE(ENCRYPT);
 
 Tablespace created.
@@ -289,7 +298,7 @@ ORA-28336: cannot encrypt SYS owned objects
 
 
 
-```
+```sql
 SQL> create user c##tdecdb identified by "Password23";
 
 User created.
@@ -331,6 +340,27 @@ Table created.
 
 相见 [Step 5: Encrypt Your Data](https://github.com/aimdotsh/tde/blob/main/在Oracle非租户环境进行TDE配置.md#step-5-encrypt-your-data)
 
+
+
+```sql
+ select tablespace_name, encrypted from dba_tablespaces;
+```
+
+查看表空间是否加密
+
+SYSAUX			       /oradata/tdecdb/sys/sysaux01.dbf
+
+```
+alter tablespace SYSAUX encryption online using 'aes128' encrypt file_name_convert=('/oradata/tdecdb/sys/sysaux01.dbf');
+```
+
+
+
+```
+ADMINISTER KEY MANAGEMENT SET KEYSTORE CLOSE IDENTIFIED BY "Password23" CONTAINER=ALL;
+
+```
+
 <img src="https://raw.githubusercontent.com/aimdotsh/photo/master/typ/image-20220218155417032.png" style="zoom:50%;" />
 
 ![](https://raw.githubusercontent.com/aimdotsh/photo/master/typ/20220217111503.png)
@@ -338,4 +368,54 @@ Table created.
 <img src="https://raw.githubusercontent.com/aimdotsh/photo/master/typ/20220218154709.png" alt="style=&quot;zoom:50%;&quot;" style="zoom:40%;" />
 
 
+
+#### Changing the Password-Based Software Keystore Password
+
+由于cdb和pdb统一使用一个钱包，修改cdb的密码之后pdb的密码也一并修改。
+
+> ADMINISTER KEY MANAGEMENT ALTER KEYSTORE PASSWORD IDENTIFIED BY
+> old_password SET new_password [WITH BACKUP [USING 'backup_identifier']];
+
+如果要修改密码需要保证其状态为 open 状态，否则会报
+
+```
+ERROR at line 1:
+ORA-46658: keystore not open in the container
+```
+
+```
+ADMINISTER KEY MANAGEMENT SET KEYSTORE OPEN IDENTIFIED BY newPassword23;
+```
+
+```
+ADMINISTER KEY MANAGEMENT CREATE KEYSTORE '/etc/ORACLE/WALLETS/tdecdb' IDENTIFIED BY Password23;
+
+ADMINISTER KEY MANAGEMENT ALTER KEYSTORE PASSWORD IDENTIFIED BY Password23 set newPassword23 WITH BACKUP;
+ADMINISTER KEY MANAGEMENT SET KEYSTORE CLOSE IDENTIFIED BY "newPassword23" CONTAINER=ALL;
+ADMINISTER KEY MANAGEMENT ALTER KEYSTORE PASSWORD IDENTIFIED BY newPassword23 set newPassword231 WITH BACKUP;
+```
+
+检查 tde 相关的状态
+
+```sql
+SELECT * FROM V$ENCRYPTION_WALLET;
+SELECT * FROM V$ENCRYPTION_KEYS;
+SELECT WRL_PARAMETER,STATUS,WALLET_TYPE FROM V$ENCRYPTION_WALLET;
+SELECT KEY_ID,KEYSTORE_TYPE FROM V$ENCRYPTION_KEYS;
+SELECT KEY_ID FROM V$ENCRYPTION_KEYS;
+SELECT KEYSTORE_TYPE FROM V$ENCRYPTION_KEYS;
+SELECT WRL_PARAMETER FROM V$ENCRYPTION_WALLET;
+SELECT STATUS FROM V$ENCRYPTION_WALLET;
+SELECT * FROM V$ENCRYPTED_TABLESPACES;
+SELECT TABLESPACE_NAME, ENCRYPTED FROM DBA_TABLESPACES;
+SELECT * FROM DBA_ENCRYPTED_COLUMNS;
+```
+
+
+
+
+
+```
+
+```
 
