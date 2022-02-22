@@ -339,7 +339,9 @@ Table created.
 
 详见 [Step 5: Encrypt Your Data](https://github.com/aimdotsh/tde/blob/main/在Oracle非租户环境进行TDE配置.md#step-5-encrypt-your-data)
 
+```sql
  select tablespace_name, encrypted from dba_tablespaces;
+```
 
 查看表空间是否加密
 
