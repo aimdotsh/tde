@@ -42,6 +42,8 @@ mkdir -p /etc/ORACLE/WALLETS/nocdb
 chown -R oracle:oinstall /etc/ORACLE/WALLETS/nocdb
 ```
 
+vi "$ORACLE_HOME"/network/admin/sqlnet.ora
+
 ```
 vi /u01/app/oracle/product/12.1.0.2/dbhome_1/network/admin/sqlnet.ora
 
