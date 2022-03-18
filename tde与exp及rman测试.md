@@ -430,7 +430,7 @@ Processing object type SCHEMA_EXPORT/TABLE/CONSTRAINT/REF_CONSTRAINT
 
 
 
-总结
+#### 总结
 
 在钱包关闭的情况下，exp和expdp 都无法导出加密数据，其他非加密表可以导出。
 
@@ -440,4 +440,333 @@ Processing object type SCHEMA_EXPORT/TABLE/CONSTRAINT/REF_CONSTRAINT
 
 
 
-tde rman  测试
+## tde rman  测试
+
+### rman 不压缩备份测试
+
+```
+RMAN> BACKUP DATABASE FORMAT '/oradata/tdecdb/backup/0318/bak_%U';
+
+Starting backup at 2022-03-18 09:03:38
+using target database control file instead of recovery catalog
+allocated channel: ORA_DISK_1
+channel ORA_DISK_1: SID=206 device type=DISK
+channel ORA_DISK_1: starting full datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+input datafile file number=00003 name=/oradata/tdecdb/sys/sysaux01.dbf
+input datafile file number=00001 name=/oradata/tdecdb/sys/system01.dbf
+input datafile file number=00004 name=/oradata/tdecdb/undo/undotbs01.dbf
+input datafile file number=00006 name=/oradata/tdecdb/data/users01.dbf
+channel ORA_DISK_1: starting piece 1 at 2022-03-18 09:03:39
+channel ORA_DISK_1: finished piece 1 at 2022-03-18 09:04:04
+piece handle=/oradata/tdecdb/backup/0318/bak_1c0omgfb_1_1 tag=TAG20220318T090339 comment=NONE
+channel ORA_DISK_1: backup set complete, elapsed time: 00:00:25
+channel ORA_DISK_1: starting full datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+input datafile file number=00060 name=/oradata/tdecdb/data/TDECDB/D87EC3294E251264E0530418000A849E/datafile/o1_mf_sysaux_k15x87vb_.dbf
+input datafile file number=00059 name=/oradata/tdecdb/data/TDECDB/D87EC3294E251264E0530418000A849E/datafile/o1_mf_system_k15x87v3_.dbf
+input datafile file number=00063 name=/oradata/tdecdb/data/TDECDB/D87EC3294E251264E0530418000A849E/datafile/o1_mf_tdetbs_k34t95d6_.dbf
+input datafile file number=00062 name=/oradata/tdecdb/data/TDECDB/D87EC3294E251264E0530418000A849E/datafile/o1_mf_pttbs_k34t7zm1_.dbf
+input datafile file number=00061 name=/oradata/tdecdb/data/TDECDB/D87EC3294E251264E0530418000A849E/datafile/o1_mf_test_tde_k18b3y43_.dbf
+channel ORA_DISK_1: starting piece 1 at 2022-03-18 09:04:04
+channel ORA_DISK_1: finished piece 1 at 2022-03-18 09:04:11
+piece handle=/oradata/tdecdb/backup/0318/bak_1d0omgg4_1_1 tag=TAG20220318T090339 comment=NONE
+channel ORA_DISK_1: backup set complete, elapsed time: 00:00:07
+channel ORA_DISK_1: starting full datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+input datafile file number=00011 name=/oradata/tdecdb/data/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_sysaux_k15zvlmn_.dbf
+input datafile file number=00010 name=/oradata/tdecdb/data/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_system_k15zvlmh_.dbf
+input datafile file number=00015 name=/tmp/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_bigf_tbs_k1vpvbp5_.dbf
+input datafile file number=00016 name=/tmp/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_bigf_tbs_k1vpxvfo_.dbf
+input datafile file number=00017 name=/tmp/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_bigf_tbs_k1vpyohb_.dbf
+input datafile file number=00014 name=/tmp/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_bigfie_t_k1vpcznp_.dbf
+input datafile file number=00013 name=/tmp/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_put_tbs_k1vp39l0_.dbf
+channel ORA_DISK_1: starting piece 1 at 2022-03-18 09:04:11
+channel ORA_DISK_1: finished piece 1 at 2022-03-18 09:04:18
+piece handle=/oradata/tdecdb/backup/0318/bak_1e0omggb_1_1 tag=TAG20220318T090339 comment=NONE
+channel ORA_DISK_1: backup set complete, elapsed time: 00:00:07
+channel ORA_DISK_1: starting full datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+input datafile file number=00055 name=/oradata/tdecdb/data/TDECDB/DA4CB73192371EFAE0530418000AE013/datafile/o1_mf_sysaux_k32gtl45_.dbf
+input datafile file number=00054 name=/oradata/tdecdb/data/TDECDB/DA4CB73192371EFAE0530418000AE013/datafile/o1_mf_system_k32gtl3p_.dbf
+channel ORA_DISK_1: starting piece 1 at 2022-03-18 09:04:18
+channel ORA_DISK_1: finished piece 1 at 2022-03-18 09:04:25
+piece handle=/oradata/tdecdb/backup/0318/bak_1f0omggi_1_1 tag=TAG20220318T090339 comment=NONE
+channel ORA_DISK_1: backup set complete, elapsed time: 00:00:07
+channel ORA_DISK_1: starting full datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+input datafile file number=00007 name=/oradata/tdecdb/sys/pdbseed/sysaux01.dbf
+input datafile file number=00005 name=/oradata/tdecdb/sys/pdbseed/system01.dbf
+channel ORA_DISK_1: starting piece 1 at 2022-03-18 09:04:25
+channel ORA_DISK_1: finished piece 1 at 2022-03-18 09:04:32
+piece handle=/oradata/tdecdb/backup/0318/bak_1g0omggp_1_1 tag=TAG20220318T090339 comment=NONE
+channel ORA_DISK_1: backup set complete, elapsed time: 00:00:07
+Finished backup at 2022-03-18 09:04:32
+
+Starting Control File and SPFILE Autobackup at 2022-03-18 09:04:32
+piece handle=/u01/app/oracle/fast_recovery_area/TDECDB/autobackup/2022_03_18/o1_mf_s_1099645472_k37po13v_.bkp comment=NONE
+Finished Control File and SPFILE Autobackup at 2022-03-18 09:04:33
+
+RMAN> exit
+
+
+Recovery Manager complete.
+[oracle@tcloud_for_12c_tdecdb:/oradata/tdecdb/backup/0318]$ ll
+```
+
+rman 不压缩恢复测试
+
+
+
+
+
+### 总结
+
+不压缩备份的时候，钱包关闭打开的情况都可以备份。
+
+### rman 压缩备份测试
+
+#### 钱包关闭 rman 压缩测试
+
+```
+RMAN>  backup as compressed backupset full database format '/oradata/tdecdb/backup/0318/full_bk1_%u%p%s.rmn';
+
+Starting backup at 2022-03-18 09:06:06
+using target database control file instead of recovery catalog
+allocated channel: ORA_DISK_1
+channel ORA_DISK_1: SID=12 device type=DISK
+channel ORA_DISK_1: starting compressed full datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+input datafile file number=00003 name=/oradata/tdecdb/sys/sysaux01.dbf
+input datafile file number=00001 name=/oradata/tdecdb/sys/system01.dbf
+input datafile file number=00004 name=/oradata/tdecdb/undo/undotbs01.dbf
+input datafile file number=00006 name=/oradata/tdecdb/data/users01.dbf
+channel ORA_DISK_1: starting piece 1 at 2022-03-18 09:06:06
+channel ORA_DISK_1: finished piece 1 at 2022-03-18 09:07:01
+piece handle=/oradata/tdecdb/backup/0318/full_bk1_1i0omgju150.rmn tag=TAG20220318T090606 comment=NONE
+channel ORA_DISK_1: backup set complete, elapsed time: 00:00:55
+channel ORA_DISK_1: starting compressed full datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+input datafile file number=00060 name=/oradata/tdecdb/data/TDECDB/D87EC3294E251264E0530418000A849E/datafile/o1_mf_sysaux_k15x87vb_.dbf
+input datafile file number=00059 name=/oradata/tdecdb/data/TDECDB/D87EC3294E251264E0530418000A849E/datafile/o1_mf_system_k15x87v3_.dbf
+input datafile file number=00063 name=/oradata/tdecdb/data/TDECDB/D87EC3294E251264E0530418000A849E/datafile/o1_mf_tdetbs_k34t95d6_.dbf
+input datafile file number=00062 name=/oradata/tdecdb/data/TDECDB/D87EC3294E251264E0530418000A849E/datafile/o1_mf_pttbs_k34t7zm1_.dbf
+input datafile file number=00061 name=/oradata/tdecdb/data/TDECDB/D87EC3294E251264E0530418000A849E/datafile/o1_mf_test_tde_k18b3y43_.dbf
+channel ORA_DISK_1: starting piece 1 at 2022-03-18 09:07:01
+RMAN-03009: failure of backup command on ORA_DISK_1 channel at 03/18/2022 09:07:02
+ORA-19914: unable to encrypt backup
+ORA-28365: wallet is not open
+continuing other job steps, job failed will not be re-run
+channel ORA_DISK_1: starting compressed full datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+input datafile file number=00011 name=/oradata/tdecdb/data/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_sysaux_k15zvlmn_.dbf
+input datafile file number=00010 name=/oradata/tdecdb/data/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_system_k15zvlmh_.dbf
+input datafile file number=00015 name=/tmp/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_bigf_tbs_k1vpvbp5_.dbf
+input datafile file number=00016 name=/tmp/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_bigf_tbs_k1vpxvfo_.dbf
+input datafile file number=00017 name=/tmp/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_bigf_tbs_k1vpyohb_.dbf
+input datafile file number=00014 name=/tmp/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_bigfie_t_k1vpcznp_.dbf
+input datafile file number=00013 name=/tmp/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_put_tbs_k1vp39l0_.dbf
+channel ORA_DISK_1: starting piece 1 at 2022-03-18 09:07:03
+RMAN-03009: failure of backup command on ORA_DISK_1 channel at 03/18/2022 09:07:04
+ORA-19914: unable to encrypt backup
+ORA-28365: wallet is not open
+continuing other job steps, job failed will not be re-run
+channel ORA_DISK_1: starting compressed full datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+input datafile file number=00055 name=/oradata/tdecdb/data/TDECDB/DA4CB73192371EFAE0530418000AE013/datafile/o1_mf_sysaux_k32gtl45_.dbf
+input datafile file number=00054 name=/oradata/tdecdb/data/TDECDB/DA4CB73192371EFAE0530418000AE013/datafile/o1_mf_system_k32gtl3p_.dbf
+channel ORA_DISK_1: starting piece 1 at 2022-03-18 09:07:04
+channel ORA_DISK_1: finished piece 1 at 2022-03-18 09:07:29
+piece handle=/oradata/tdecdb/backup/0318/full_bk1_1l0omglo153.rmn tag=TAG20220318T090606 comment=NONE
+channel ORA_DISK_1: backup set complete, elapsed time: 00:00:25
+channel ORA_DISK_1: starting compressed full datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+input datafile file number=00007 name=/oradata/tdecdb/sys/pdbseed/sysaux01.dbf
+input datafile file number=00005 name=/oradata/tdecdb/sys/pdbseed/system01.dbf
+channel ORA_DISK_1: starting piece 1 at 2022-03-18 09:07:29
+channel ORA_DISK_1: finished piece 1 at 2022-03-18 09:07:54
+piece handle=/oradata/tdecdb/backup/0318/full_bk1_1m0omgmh154.rmn tag=TAG20220318T090606 comment=NONE
+channel ORA_DISK_1: backup set complete, elapsed time: 00:00:25
+RMAN-00571: ===========================================================
+RMAN-00569: =============== ERROR MESSAGE STACK FOLLOWS ===============
+RMAN-00571: ===========================================================
+
+RMAN-03009: failure of backup command on ORA_DISK_1 channel at 03/18/2022 09:07:02
+ORA-19914: unable to encrypt backup
+ORA-28365: wallet is not open
+RMAN-03009: failure of backup command on ORA_DISK_1 channel at 03/18/2022 09:07:04
+ORA-19914: unable to encrypt backup
+ORA-28365: wallet is not open
+
+RMAN> exit
+
+
+Recovery Manager complete.
+[oracle@tcloud_for_12c_tdecdb:/oradata/tdecdb/backup/0318]$ s
+
+SQL*Plus: Release 12.1.0.2.0 Production on Fri Mar 18 09:08:43 2022
+
+Copyright (c) 1982, 2014, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 12c Enterprise Edition Release 12.1.0.2.0 - 64bit Production
+With the Partitioning, OLAP, Advanced Analytics and Real Application Testing options
+
+
+Session altered.
+
+sys@(594_CDB$ROOT)>  ADMINISTER KEY MANAGEMENT SET KEYSTORE OPEN IDENTIFIED BY Password23;
+
+keystore altered.
+
+sys@(594_CDB$ROOT)>
+sys@(594_CDB$ROOT)>
+sys@(594_CDB$ROOT)>
+sys@(594_CDB$ROOT)> exit
+Disconnected from Oracle Database 12c Enterprise Edition Release 12.1.0.2.0 - 64bit Production
+With the Partitioning, OLAP, Advanced Analytics and Real Application Testing options
+[oracle@tcloud_for_12c_tdecdb:/oradata/tdecdb/backup/0318]$ rman target /
+
+Recovery Manager: Release 12.1.0.2.0 - Production on Fri Mar 18 09:09:32 2022
+
+Copyright (c) 1982, 2014, Oracle and/or its affiliates.  All rights reserved.
+
+connected to target database: TDECDB (DBID=1299067025)
+
+RMAN>  backup as compressed backupset full database format '/oradata/tdecdb/backup/0318/full_bk1_%u%p%s.rmn2b';
+
+Starting backup at 2022-03-18 09:09:47
+using target database control file instead of recovery catalog
+allocated channel: ORA_DISK_1
+channel ORA_DISK_1: SID=405 device type=DISK
+channel ORA_DISK_1: starting compressed full datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+input datafile file number=00003 name=/oradata/tdecdb/sys/sysaux01.dbf
+input datafile file number=00001 name=/oradata/tdecdb/sys/system01.dbf
+input datafile file number=00004 name=/oradata/tdecdb/undo/undotbs01.dbf
+input datafile file number=00006 name=/oradata/tdecdb/data/users01.dbf
+channel ORA_DISK_1: starting piece 1 at 2022-03-18 09:09:47
+channel ORA_DISK_1: finished piece 1 at 2022-03-18 09:10:42
+piece handle=/oradata/tdecdb/backup/0318/full_bk1_1n0omgqr155.rmn2b tag=TAG20220318T090947 comment=NONE
+channel ORA_DISK_1: backup set complete, elapsed time: 00:00:55
+channel ORA_DISK_1: starting compressed full datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+input datafile file number=00060 name=/oradata/tdecdb/data/TDECDB/D87EC3294E251264E0530418000A849E/datafile/o1_mf_sysaux_k15x87vb_.dbf
+input datafile file number=00059 name=/oradata/tdecdb/data/TDECDB/D87EC3294E251264E0530418000A849E/datafile/o1_mf_system_k15x87v3_.dbf
+input datafile file number=00063 name=/oradata/tdecdb/data/TDECDB/D87EC3294E251264E0530418000A849E/datafile/o1_mf_tdetbs_k34t95d6_.dbf
+input datafile file number=00062 name=/oradata/tdecdb/data/TDECDB/D87EC3294E251264E0530418000A849E/datafile/o1_mf_pttbs_k34t7zm1_.dbf
+input datafile file number=00061 name=/oradata/tdecdb/data/TDECDB/D87EC3294E251264E0530418000A849E/datafile/o1_mf_test_tde_k18b3y43_.dbf
+channel ORA_DISK_1: starting piece 1 at 2022-03-18 09:10:43
+channel ORA_DISK_1: finished piece 1 at 2022-03-18 09:11:08
+piece handle=/oradata/tdecdb/backup/0318/full_bk1_1o0omgsi156.rmn2b tag=TAG20220318T090947 comment=NONE
+channel ORA_DISK_1: backup set complete, elapsed time: 00:00:25
+channel ORA_DISK_1: starting compressed full datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+input datafile file number=00011 name=/oradata/tdecdb/data/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_sysaux_k15zvlmn_.dbf
+input datafile file number=00010 name=/oradata/tdecdb/data/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_system_k15zvlmh_.dbf
+input datafile file number=00015 name=/tmp/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_bigf_tbs_k1vpvbp5_.dbf
+input datafile file number=00016 name=/tmp/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_bigf_tbs_k1vpxvfo_.dbf
+input datafile file number=00017 name=/tmp/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_bigf_tbs_k1vpyohb_.dbf
+input datafile file number=00014 name=/tmp/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_bigfie_t_k1vpcznp_.dbf
+input datafile file number=00013 name=/tmp/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_put_tbs_k1vp39l0_.dbf
+channel ORA_DISK_1: starting piece 1 at 2022-03-18 09:11:08
+RMAN-03009: failure of backup command on ORA_DISK_1 channel at 03/18/2022 09:11:09
+ORA-19914: unable to encrypt backup
+ORA-28365: wallet is not open
+continuing other job steps, job failed will not be re-run
+channel ORA_DISK_1: starting compressed full datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+input datafile file number=00055 name=/oradata/tdecdb/data/TDECDB/DA4CB73192371EFAE0530418000AE013/datafile/o1_mf_sysaux_k32gtl45_.dbf
+input datafile file number=00054 name=/oradata/tdecdb/data/TDECDB/DA4CB73192371EFAE0530418000AE013/datafile/o1_mf_system_k32gtl3p_.dbf
+channel ORA_DISK_1: starting piece 1 at 2022-03-18 09:11:09
+channel ORA_DISK_1: finished piece 1 at 2022-03-18 09:11:34
+piece handle=/oradata/tdecdb/backup/0318/full_bk1_1q0omgtd158.rmn2b tag=TAG20220318T090947 comment=NONE
+channel ORA_DISK_1: backup set complete, elapsed time: 00:00:25
+channel ORA_DISK_1: starting compressed full datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+input datafile file number=00007 name=/oradata/tdecdb/sys/pdbseed/sysaux01.dbf
+input datafile file number=00005 name=/oradata/tdecdb/sys/pdbseed/system01.dbf
+channel ORA_DISK_1: starting piece 1 at 2022-03-18 09:11:34
+channel ORA_DISK_1: finished piece 1 at 2022-03-18 09:11:59
+piece handle=/oradata/tdecdb/backup/0318/full_bk1_1r0omgu6159.rmn2b tag=TAG20220318T090947 comment=NONE
+channel ORA_DISK_1: backup set complete, elapsed time: 00:00:25
+RMAN-00571: ===========================================================
+RMAN-00569: =============== ERROR MESSAGE STACK FOLLOWS ===============
+RMAN-00571: ===========================================================
+
+RMAN-03009: failure of backup command on ORA_DISK_1 channel at 03/18/2022 09:11:09
+ORA-19914: unable to encrypt backup
+ORA-28365: wallet is not open
+```
+
+#### 钱包打开 rman 压缩测试
+
+```
+RMAN> backup as compressed backupset full database format '/oradata/tdecdb/backup/0318/full_bk1_%u%p%s.open';
+
+Starting backup at 2022-03-18 09:26:55
+using target database control file instead of recovery catalog
+allocated channel: ORA_DISK_1
+channel ORA_DISK_1: SID=11 device type=DISK
+channel ORA_DISK_1: starting compressed full datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+input datafile file number=00003 name=/oradata/tdecdb/sys/sysaux01.dbf
+input datafile file number=00001 name=/oradata/tdecdb/sys/system01.dbf
+input datafile file number=00004 name=/oradata/tdecdb/undo/undotbs01.dbf
+input datafile file number=00006 name=/oradata/tdecdb/data/users01.dbf
+channel ORA_DISK_1: starting piece 1 at 2022-03-18 09:26:56
+channel ORA_DISK_1: finished piece 1 at 2022-03-18 09:27:51
+piece handle=/oradata/tdecdb/backup/0318/full_bk1_1s0omhr0160.open tag=TAG20220318T092656 comment=NONE
+channel ORA_DISK_1: backup set complete, elapsed time: 00:00:55
+channel ORA_DISK_1: starting compressed full datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+input datafile file number=00060 name=/oradata/tdecdb/data/TDECDB/D87EC3294E251264E0530418000A849E/datafile/o1_mf_sysaux_k15x87vb_.dbf
+input datafile file number=00059 name=/oradata/tdecdb/data/TDECDB/D87EC3294E251264E0530418000A849E/datafile/o1_mf_system_k15x87v3_.dbf
+input datafile file number=00063 name=/oradata/tdecdb/data/TDECDB/D87EC3294E251264E0530418000A849E/datafile/o1_mf_tdetbs_k34t95d6_.dbf
+input datafile file number=00062 name=/oradata/tdecdb/data/TDECDB/D87EC3294E251264E0530418000A849E/datafile/o1_mf_pttbs_k34t7zm1_.dbf
+input datafile file number=00061 name=/oradata/tdecdb/data/TDECDB/D87EC3294E251264E0530418000A849E/datafile/o1_mf_test_tde_k18b3y43_.dbf
+channel ORA_DISK_1: starting piece 1 at 2022-03-18 09:27:51
+channel ORA_DISK_1: finished piece 1 at 2022-03-18 09:28:16
+piece handle=/oradata/tdecdb/backup/0318/full_bk1_1t0omhsn161.open tag=TAG20220318T092656 comment=NONE
+channel ORA_DISK_1: backup set complete, elapsed time: 00:00:25
+channel ORA_DISK_1: starting compressed full datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+input datafile file number=00011 name=/oradata/tdecdb/data/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_sysaux_k15zvlmn_.dbf
+input datafile file number=00010 name=/oradata/tdecdb/data/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_system_k15zvlmh_.dbf
+input datafile file number=00015 name=/tmp/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_bigf_tbs_k1vpvbp5_.dbf
+input datafile file number=00016 name=/tmp/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_bigf_tbs_k1vpxvfo_.dbf
+input datafile file number=00017 name=/tmp/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_bigf_tbs_k1vpyohb_.dbf
+input datafile file number=00014 name=/tmp/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_bigfie_t_k1vpcznp_.dbf
+input datafile file number=00013 name=/tmp/TDECDB/D87F6220B46B36BCE0530418000A94A3/datafile/o1_mf_put_tbs_k1vp39l0_.dbf
+channel ORA_DISK_1: starting piece 1 at 2022-03-18 09:28:16
+channel ORA_DISK_1: finished piece 1 at 2022-03-18 09:28:41
+piece handle=/oradata/tdecdb/backup/0318/full_bk1_1u0omhtg162.open tag=TAG20220318T092656 comment=NONE
+channel ORA_DISK_1: backup set complete, elapsed time: 00:00:25
+channel ORA_DISK_1: starting compressed full datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+input datafile file number=00055 name=/oradata/tdecdb/data/TDECDB/DA4CB73192371EFAE0530418000AE013/datafile/o1_mf_sysaux_k32gtl45_.dbf
+input datafile file number=00054 name=/oradata/tdecdb/data/TDECDB/DA4CB73192371EFAE0530418000AE013/datafile/o1_mf_system_k32gtl3p_.dbf
+channel ORA_DISK_1: starting piece 1 at 2022-03-18 09:28:41
+channel ORA_DISK_1: finished piece 1 at 2022-03-18 09:29:06
+piece handle=/oradata/tdecdb/backup/0318/full_bk1_1v0omhu9163.open tag=TAG20220318T092656 comment=NONE
+channel ORA_DISK_1: backup set complete, elapsed time: 00:00:25
+channel ORA_DISK_1: starting compressed full datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+input datafile file number=00007 name=/oradata/tdecdb/sys/pdbseed/sysaux01.dbf
+input datafile file number=00005 name=/oradata/tdecdb/sys/pdbseed/system01.dbf
+channel ORA_DISK_1: starting piece 1 at 2022-03-18 09:29:06
+channel ORA_DISK_1: finished piece 1 at 2022-03-18 09:29:31
+piece handle=/oradata/tdecdb/backup/0318/full_bk1_200omhv2164.open tag=TAG20220318T092656 comment=NONE
+channel ORA_DISK_1: backup set complete, elapsed time: 00:00:25
+Finished backup at 2022-03-18 09:29:31
+
+Starting Control File and SPFILE Autobackup at 2022-03-18 09:29:31
+piece handle=/u01/app/oracle/fast_recovery_area/TDECDB/autobackup/2022_03_18/o1_mf_s_1099646971_k37r3vtd_.bkp comment=NONE
+Finished Control File and SPFILE Autobackup at 2022-03-18 09:29:32
+```
+
+### 总结
+
+压缩备份的时候，需要钱包都打开，cdb和pdb都需要打开，否则为打开钱包的db无法进行备份。也就是压缩备份的时候，rman 会对tde加密数据进行解密，然后再进行压缩。
+

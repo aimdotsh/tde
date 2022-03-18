@@ -851,7 +851,7 @@ ORA-65086: cannot open/close the pluggable database
 
 **(4)插入目标CDB中**
 
-使用XML文件, 由于是在通一个cdb 中进行测试，需要将源pdb 删除掉，删除的时候保留数据文件，如果不删除源pdb 会报以下
+使用XML文件, 由于是在同一个cdb 中进行测试，需要将源pdb 删除掉，删除的时候保留数据文件，如果不删除源pdb 会报以下
 
 ```
 sys@(591_CDB$ROOT)>  create pluggable database cbtdepdb using  '/tmp/tdepdb.xml'  nocopy tempfile reuse;
