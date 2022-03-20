@@ -310,7 +310,4 @@ EOF
 
 使用 oracle 用户 执行 sh dginfo.sh
 
-```
-
-```
-
+![image-20220307164108078](http://pic.liups.com/images/2022/03/07/202203071641123.png)
