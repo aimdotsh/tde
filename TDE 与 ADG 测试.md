@@ -135,7 +135,7 @@ vi tnsnames.ora
 ```shell
 orcldg1 =
   (description =
-    (address = (protocol = tcp)(host = 10.1.31.170)(port = 1521))
+    (address = (protocol = tcp)(host = 8.8.31.170)(port = 1521))
     (connect_data =
       (server = dedicated)
       (service_name = orcl)
@@ -144,7 +144,7 @@ orcldg1 =
 
 orcl =
   (description =
-    (address = (protocol = tcp)(host = 10.1.31.70)(port = 1521))
+    (address = (protocol = tcp)(host = 8.8.31.70)(port = 1521))
     (connect_data =
       (server = dedicated)
       (service_name = orcl)
@@ -167,7 +167,7 @@ Used parameter files:
 
 
 Used TNSNAMES adapter to resolve the alias
-Attempting to contact (description = (address = (protocol = tcp)(host = 10.1.31.70)(port = 1521)) (connect_data = (server = dedicated) (service_name = orcl)))
+Attempting to contact (description = (address = (protocol = tcp)(host = 8.8.31.70)(port = 1521)) (connect_data = (server = dedicated) (service_name = orcl)))
 OK (20 msec)
 [oracle@ecsdbdg1 admin]$ tnsping orcldg1
 
@@ -180,7 +180,7 @@ Used parameter files:
 
 
 Used TNSNAMES adapter to resolve the alias
-Attempting to contact (description = (address = (protocol = tcp)(host = 10.1.31.170)(port = 1521)) (connect_data = (server = dedicated) (service_name = orcl)))
+Attempting to contact (description = (address = (protocol = tcp)(host = 8.8.31.170)(port = 1521)) (connect_data = (server = dedicated) (service_name = orcl)))
 OK (0 msec)
 [oracle@ecsdbdg1 admin]$
 
@@ -218,7 +218,7 @@ alter system set log_archive_dest_state_2=enable;
 
 ```shell
 cd $ORACLE_HOME/dbs
-scp scp orapworcl 10.1.31.170:/data/app/oracle/product/11.2.0.4/dbhome_1/
+scp scp orapworcl 8.8.31.170:/data/app/oracle/product/11.2.0.4/dbhome_1/
 ```
 
 #### 备库启动数据库实例
