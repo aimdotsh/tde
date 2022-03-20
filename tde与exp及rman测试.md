@@ -787,3 +787,139 @@ Finished Control File and SPFILE Autobackup at 2022-03-18 09:29:32
 
 压缩备份的时候，需要钱包都打开，cdb和pdb都需要打开，否则为打开钱包的db无法进行备份。也就是压缩备份的时候，rman 会对tde加密数据进行解密，然后再进行压缩。
 
+
+
+### rman 恢复
+
+#### 1、目标库启用 tde
+
+
+
+使用root 创建单独的目录，权限授予给 oracle 用户。
+
+```shell
+mkdir -p /etc/ORACLE/WALLETS/tdecdb
+chown -R oracle:oinstall /etc/ORACLE/WALLETS/tdecdb
+```
+
+##### 1.1、编辑 sqlnet.ora
+
+编辑 $ORACLE_HOME/network/admin/sqlnet.ora 新增 ENCRYPTION_WALLET_LOCATION 配置
+
+```shell
+vi /u01/app/oracle/product/12.1.0.2/dbhome_1/network/admin/sqlnet.ora
+
+ENCRYPTION_WALLET_LOCATION=
+  (SOURCE=
+   (METHOD=FILE)
+    (METHOD_DATA=
+     (DIRECTORY=/etc/ORACLE/WALLETS/tdecdb)))
+```
+
+##### 1.2、将源库的key 复制到目标库
+
+```
+cd /etc/ORACLE/WALLETS/tdecdb/
+scp ewallet.p12 oracle@目标ip:/etc/ORACLE/WALLETS/tdecdb
+```
+
+##### 1.3、启用  Software Keystore
+
+启动数据库到nomount状态，然后启用   Software Keystore
+
+```
+SQL> ADMINISTER KEY MANAGEMENT SET KEYSTORE OPEN IDENTIFIED BY Password23;
+keystore altered.
+```
+
+#### 2、复制备份文件到目标环境
+
+```
+scp *.open  oracle@101.33.229.100:/oradata/tdecdb/backup/0318/
+scp  /u01/app/oracle/fast_recovery_area/TDECDB/autobackup/2022_03_18/o1_mf_s_1099646971_k37r3vtd_.bkp oracle@101.33.229.100:/oradata/tdecdb/backup/0318/
+```
+
+#### 3、恢复参数文件
+
+```
+RMAN>  restore spfile from '/u01/app/oracle/fast_recovery_area/TDECDB/autobackup/2022_03_18/o1_mf_s_1099646971_k37r3vtd_.bkp';
+
+Starting restore at 2022-03-19 22:01:08
+using channel ORA_DISK_1
+
+channel ORA_DISK_1: restoring spfile from AUTOBACKUP /u01/app/oracle/fast_recovery_area/TDECDB/autobackup/2022_03_18/o1_mf_s_1099646971_k37r3vtd_.bkp
+channel ORA_DISK_1: SPFILE restore from AUTOBACKUP complete
+Finished restore at 2022-03-19 22:01:10
+
+RMAN> exit
+```
+
+#### 4、恢复控制文件
+
+```
+RMAN> RESTORE CONTROLFILE FROM '/u01/app/oracle/fast_recovery_area/TDECDB/autobackup/2022_03_18/o1_mf_s_1099646971_k37r3vtd_.bkp';
+
+Starting restore at 2022-03-19 22:04:49
+using target database control file instead of recovery catalog
+allocated channel: ORA_DISK_1
+channel ORA_DISK_1: SID=398 device type=DISK
+
+channel ORA_DISK_1: restoring control file
+channel ORA_DISK_1: restore complete, elapsed time: 00:00:01
+output file name=/oradata/tdecdb/sys/control01.ctl
+output file name=/oradata/tdecdb/redo/control02.ctl
+Finished restore at 2022-03-19 22:04:51
+```
+
+#### 5、启动数据库到mount 状态
+
+```
+alter database mout
+```
+
+#### 6、restore database;
+
+```
+RMAN> restore database;
+```
+
+#### 7、recover database
+
+```
+RMAN> recover database
+```
+
+
+
+### tde rman 恢复总结
+
+rman 恢复的时候，需要将源库的密钥复制奥目标库，配置 sqlnet.ora ，然后启用Software Keystore，即可。
+
+0、复制源库的密钥到目标库的tde 钱包路径
+
+```
+cd /etc/ORACLE/WALLETS/tdecdb/
+scp ewallet.p12 oracle@目标ip:/etc/ORACLE/WALLETS/tdecdb
+```
+
+1、配置 sqlnet.ora 
+
+编辑 $ORACLE_HOME/network/admin/sqlnet.ora 新增 ENCRYPTION_WALLET_LOCATION 配置
+
+```shell
+vi /u01/app/oracle/product/12.1.0.2/dbhome_1/network/admin/sqlnet.ora
+
+ENCRYPTION_WALLET_LOCATION=
+  (SOURCE=
+   (METHOD=FILE)
+    (METHOD_DATA=
+     (DIRECTORY=/etc/ORACLE/WALLETS/tdecdb)))
+```
+
+2、启用 Software Keystore
+
+```
+ADMINISTER KEY MANAGEMENT SET KEYSTORE OPEN IDENTIFIED BY Password23;
+```
+
+剩下的操作跟常规rman 恢复相同。
