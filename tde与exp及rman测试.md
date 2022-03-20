@@ -18,6 +18,20 @@
          * [钱包关闭 rman 压缩测试](#钱包关闭-rman-压缩测试)
          * [钱包打开 rman 压缩测试](#钱包打开-rman-压缩测试)
       * [总结](#总结-2)
+      * [rman 恢复](#rman-恢复)
+         * [1、目标库启用 tde](#1目标库启用-tde)
+            * [1.1、编辑 sqlnet.ora](#11编辑-sqlnetora)
+            * [1.2、将源库的key 复制到目标库](#12将源库的key-复制到目标库)
+            * [1.3、启用  Software Keystore](#13启用--software-keystore)
+         * [2、复制备份文件到目标环境](#2复制备份文件到目标环境)
+         * [3、恢复参数文件](#3恢复参数文件)
+         * [4、恢复控制文件](#4恢复控制文件)
+         * [5、启动数据库到mount 状态](#5启动数据库到mount-状态)
+         * [6、restore database;](#6restore-database)
+         * [7、recover database](#7recover-database)
+      * [tde rman 恢复总结](#tde-rman-恢复总结)
+
+
 
 ## tde exp/imp 测试
 
