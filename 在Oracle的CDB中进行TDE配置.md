@@ -22,13 +22,6 @@
 > alter pluggable database tdepdb save state instances=all;
 > ```
 >
-> ```
-> create pluggable database tdepdb2 admin user pdbadmin identified by "Password123";
-> alter pluggable database tdepdb2 open  instances=all;
-> alter pluggable database tdepdb2 save state instances=all;
-> ```
-
-
 
    * [ORACLE 在CDB 的 TDE 配置](#oracle-在cdb-的-tde-配置)
       * [Step 1: Set the Software Keystore Location in the sqlnet.ora File](#step-1-set-the-software-keystore-location-in-the-sqlnetora-file)
